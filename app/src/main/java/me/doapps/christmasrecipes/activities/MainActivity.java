@@ -6,51 +6,83 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.shamanland.fab.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.doapps.christmasrecipes.R;
 import me.doapps.christmasrecipes.adapters.Adapter_Recipe;
+import me.doapps.christmasrecipes.adapters.Adapter_Recipes;
 import me.doapps.christmasrecipes.beans.Recipe_DTO;
+import me.doapps.christmasrecipes.dialogs.Dialog_Internet;
+import me.doapps.christmasrecipes.utils.InternetUtil;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
-    private RecyclerView recycler_recipes;
+public class MainActivity extends ActionBarActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+    private ListView list_recipes;
     private FloatingActionButton fab_share;
+    private InterstitialAd interstitial;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recycler_recipes = (RecyclerView)findViewById(R.id.recycler_recipes);
-        fab_share = (FloatingActionButton)findViewById(R.id.fab_share);
-        fab_share.setOnClickListener(this);
+        /**
+         * Load Intersticial
+         */
+        loadIntersticial();
 
-        ArrayList<Recipe_DTO> recipe_dtos = new ArrayList<Recipe_DTO>();
-        for (int i = 0; i < 10; i++) {
-            if(i==0){
-                recipe_dtos.add(new Recipe_DTO("Pavo al horno con papas", R.drawable.recipe_default));
-            }
-            else{
-                if(i%2==0){
-                    recipe_dtos.add(new Recipe_DTO("Yuca con uevo acaramelado", R.drawable.recipe_example_01));
-                }
-                else{
-                    recipe_dtos.add(new Recipe_DTO("Tacos a la peruana", R.drawable.recipe_example_02));
-                }
-            }
+        /**
+         * Load Banner
+         */
+        loadBanner();
 
+
+        list_recipes = (ListView) findViewById(R.id.list_recipes);
+        list_recipes.setOnItemClickListener(this);
+        //fab_share = (FloatingActionButton)findViewById(R.id.fab_share);
+        //fab_share.setOnClickListener(this);
+
+        final ArrayList<Recipe_DTO> temp_recipe_dtos = new ArrayList<Recipe_DTO>();
+
+        /** internet **/
+        InternetUtil internet = new InternetUtil(MainActivity.this);
+        if (internet.isConnectingToInternet()) {
+            /** parse **/
+            ParseQuery<Recipe_DTO> queryRecipes = Recipe_DTO.getQuery();
+            queryRecipes.findInBackground(new FindCallback<Recipe_DTO>() {
+                @Override
+                public void done(List<Recipe_DTO> recipe_dtos, ParseException e) {
+                    Log.e("done", recipe_dtos.size() + "");
+                    for (int i = 0; i < recipe_dtos.size(); i++) {
+                        //temp_recipe_dtos.add(new Recipe_DTO(recipe_dtos.get(i).getName(), R.drawable.recipe_default));
+                        Log.e("name", recipe_dtos.get(i).getName() + "," + recipe_dtos.get(i).getImage_url());
+                        temp_recipe_dtos.add(recipe_dtos.get(i));
+                    }
+                    list_recipes.setAdapter(new Adapter_Recipes(MainActivity.this, temp_recipe_dtos));
+                }
+            });
+        } else {
+            Dialog_Internet dialog = new Dialog_Internet(MainActivity.this);
+            dialog.show();
         }
-        recycler_recipes.setHasFixedSize(true);
-        recycler_recipes.setAdapter(new Adapter_Recipe(recipe_dtos,R.layout.row_recipes));
-        recycler_recipes.setLayoutManager(new LinearLayoutManager(this));
-        recycler_recipes.setItemAnimator(new DefaultItemAnimator());
+
 
     }
 
@@ -79,6 +111,57 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        startActivity(new Intent(MainActivity.this, RecipeActivity.class));
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, "Recetas Navideñas");
+            String sAux = "\nTe invito a descargar esta aplicación:\n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=me.doapps.pondetuparte&hl=es\n\n";
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+            startActivity(Intent.createChooser(i, "Compartir"));
+        } catch (Exception e) {
+            //e.toString();
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Recipe_DTO recipe_dto_ = (Recipe_DTO) adapterView.getAdapter().getItem(i);
+        Intent intent = new Intent(MainActivity.this, RecipeActivity.class);
+        intent.putExtra("name", recipe_dto_.getName());
+        intent.putExtra("prepare", String.valueOf(recipe_dto_.getPrepare()));
+        intent.putExtra("cook", String.valueOf(recipe_dto_.getCook()));
+        intent.putExtra("serves", String.valueOf(recipe_dto_.getServes()));
+        intent.putExtra("summary", recipe_dto_.getSummary());
+        intent.putExtra("ingredients", recipe_dto_.getIngredients());
+        intent.putExtra("directions", recipe_dto_.getDirections());
+        intent.putExtra("image_url", recipe_dto_.getImage_url());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getInterstitial().isLoaded()) {
+            getInterstitial().show();
+        }
+        super.onBackPressed();
+    }
+
+    private void loadIntersticial() {
+        interstitial = new InterstitialAd(this);
+        interstitial.setAdUnitId(getResources().getString(R.string.admob_interstitial));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitial.loadAd(adRequest);
+    }
+
+    public InterstitialAd getInterstitial() {
+        return interstitial;
+    }
+
+    /****/
+    private void loadBanner() {
+        AdView adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 }

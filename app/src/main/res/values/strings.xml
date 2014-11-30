@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ChristmasRecipes</string>
+    <string name="app_name">Recetas Navideñas</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Main Activity -->
     <string name="title">Recetas Navideñas</string>
     <string name="recipe_name">Pavo al horno con papas</string>
     <string name="recipe_prepare">5 min</string>
     <string name="recipe_cook">10 min</string>
 
+    <!-- Recipe Activity -->
     <string name="recipe_serves">5 personas</string>
     <string name="summary">Resumen</string>
     <string name="ingredients">Ingredientes</string>
@@ -49,4 +51,14 @@
         in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
     </string>
 
+    <!-- Dialog -->
+    <string name="message">Revise su conexión de internet por favor!</string>
+
+    <!-- Parse Keys -->
+    <string name="application_id">EueVCBMg9BRD17dFBoRuMFxCqSbsoMxDQbeG7yev</string>
+    <string name="client_key">HmdfUjdnUiPUgD3Y7K3PnA6cORLKojtVdslCxLhW</string>
+
+    <!-- Admob Key -->
+    <string name="admob_key">ca-app-pub-8995045147204986/8006531356</string>
+    <string name="admob_interstitial">ca-app-pub-8995045147204986/1959997756</string>
 </resources>

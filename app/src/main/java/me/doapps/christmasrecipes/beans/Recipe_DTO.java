@@ -1,9 +1,14 @@
 package me.doapps.christmasrecipes.beans;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 /**
  * Created by jonathan on 25/11/2014.
  */
-public class Recipe_DTO {
+@ParseClassName("Recipes")
+public class Recipe_DTO extends ParseObject {
     private String objectId;
     private String name;
     private int prepare;
@@ -12,12 +17,14 @@ public class Recipe_DTO {
     private String summary;
     private String directions;
     private String ingredients;
+    private String image_url;
 
     private int res_id;
 
-    public Recipe_DTO(){}
+    public Recipe_DTO() {
+    }
 
-    public Recipe_DTO(String name, int res_id){
+    public Recipe_DTO(String name, int res_id) {
         this.name = name;
         this.res_id = res_id;
     }
@@ -34,74 +41,89 @@ public class Recipe_DTO {
     }
 
     public String getObjectId() {
-        return objectId;
+        return getString("objectId");
     }
 
     public void setObjectId(String objectId) {
-        this.objectId = objectId;
+        put("objectId", objectId);
     }
 
     public String getName() {
-        return name;
+        return getString("name");
     }
 
     public void setName(String name) {
-        this.name = name;
+        put("name", name);
     }
 
     public int getPrepare() {
-        return prepare;
+        return getInt("prepare");
     }
 
     public void setPrepare(int prepare) {
-        this.prepare = prepare;
+        put("prepare", prepare);
     }
 
     public int getCook() {
-        return cook;
+        return getInt("cook");
     }
 
     public void setCook(int cook) {
-        this.cook = cook;
+        put("cook", cook);
     }
 
     public int getServes() {
-        return serves;
+        return getInt("serves");
     }
 
     public void setServes(int serves) {
-        this.serves = serves;
+        put("serves", serves);
     }
 
     public String getSummary() {
-        return summary;
+        return getString("summary");
     }
 
     public void setSummary(String summary) {
-        this.summary = summary;
+        put("summary", summary);
     }
 
     public String getDirections() {
-        return directions;
+        return getString("directions");
     }
 
     public void setDirections(String directions) {
-        this.directions = directions;
+        put("directions", directions);
     }
 
     public String getIngredients() {
-        return ingredients;
+        return getString("ingredients");
     }
 
     public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
+        put("ingredients", ingredients);
     }
 
     public int getRes_id() {
-        return res_id;
+        return getInt("res_id");
     }
 
     public void setRes_id(int res_id) {
-        this.res_id = res_id;
+        put("res_id", res_id);
+    }
+
+    public String getImage_url() {
+        return getString("image_url");
+    }
+
+    public void setImage_url(String image_url) {
+        put("image_url", image_url);
+    }
+
+    /**
+     * querys*
+     */
+    public static ParseQuery<Recipe_DTO> getQuery() {
+        return ParseQuery.getQuery(Recipe_DTO.class);
     }
 }

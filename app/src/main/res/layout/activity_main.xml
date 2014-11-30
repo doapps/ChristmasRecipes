@@ -1,15 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_recipes"
-        android:scrollbars="vertical"
+    <ListView
+        android:id="@+id/list_recipes"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:divider="@null"></ListView>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adUnitId="@string/admob_key"
+        ads:adSize="BANNER"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <com.shamanland.fab.FloatingActionButton
         android:id="@+id/fab_share"
@@ -23,5 +34,6 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp" />
+
 
 </RelativeLayout>

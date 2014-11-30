@@ -11,15 +11,15 @@ public class UtilFonts {
         return Typeface.createFromAsset(context.getAssets(), "fonts/HollyBerryWonderland.ttf");
     }
     public static Typeface setHelveticaBold(Context context){
-        return Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Bold.otf.ttf");
+        return Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Bold.otf");
     }
     public static Typeface setHelveticaMedium(Context context){
-        return Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Medium.otf.ttf");
+        return Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Medium.otf");
     }
     public static Typeface setHelveticaRoman(Context context){
-        return Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Roman.otf.ttf");
+        return Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Roman.otf");
     }
     public static Typeface setHelveticaThin(Context context){
-        return Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Thin.otf.ttf");
+        return Typeface.createFromAsset(context.getAssets(), "fonts/Helvetica_Thin.otf");
     }
 }
