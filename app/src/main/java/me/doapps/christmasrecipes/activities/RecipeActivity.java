@@ -83,7 +83,7 @@ public class RecipeActivity extends ActionBarActivity implements View.OnClickLis
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, recipe_name);
-            String sAux = "\n"+recipe_name+":\n\n";
+            String sAux = "\n"+recipe_summary+":\n\n";
             sAux = sAux + "https://play.google.com/store/apps/details?id=me.doapps.pondetuparte&hl=es\n\n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, recipe_name));
