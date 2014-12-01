@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -36,12 +37,15 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private ListView list_recipes;
     private FloatingActionButton fab_share;
     private InterstitialAd interstitial;
+    private Dialog_Internet dialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dialog = new Dialog_Internet(MainActivity.this);
 
         /**
          * Load Intersticial
@@ -56,8 +60,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         list_recipes = (ListView) findViewById(R.id.list_recipes);
         list_recipes.setOnItemClickListener(this);
-        //fab_share = (FloatingActionButton)findViewById(R.id.fab_share);
-        //fab_share.setOnClickListener(this);
+        fab_share = (FloatingActionButton)findViewById(R.id.fab_share);
+        fab_share.setOnClickListener(this);
 
         final ArrayList<Recipe_DTO> temp_recipe_dtos = new ArrayList<Recipe_DTO>();
 
@@ -69,21 +73,25 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             queryRecipes.findInBackground(new FindCallback<Recipe_DTO>() {
                 @Override
                 public void done(List<Recipe_DTO> recipe_dtos, ParseException e) {
-                    Log.e("done", recipe_dtos.size() + "");
-                    for (int i = 0; i < recipe_dtos.size(); i++) {
-                        //temp_recipe_dtos.add(new Recipe_DTO(recipe_dtos.get(i).getName(), R.drawable.recipe_default));
-                        Log.e("name", recipe_dtos.get(i).getName() + "," + recipe_dtos.get(i).getImage_url());
-                        temp_recipe_dtos.add(recipe_dtos.get(i));
+                    if (e == null) {
+                        ((ProgressBar)findViewById(R.id.loading_recipes)).setVisibility(View.GONE);
+                        list_recipes.setVisibility(View.VISIBLE);
+                        for (int i = 0; i < recipe_dtos.size(); i++) {
+                            //temp_recipe_dtos.add(new Recipe_DTO(recipe_dtos.get(i).getName(), R.drawable.recipe_default));
+                            Log.e("name", recipe_dtos.get(i).getName() + "," + recipe_dtos.get(i).getImage_url());
+                            temp_recipe_dtos.add(recipe_dtos.get(i));
+                        }
+                        list_recipes.setAdapter(new Adapter_Recipes(MainActivity.this, temp_recipe_dtos));
+                    } else {
+                        e.printStackTrace();
+                        dialog.show();
                     }
-                    list_recipes.setAdapter(new Adapter_Recipes(MainActivity.this, temp_recipe_dtos));
                 }
             });
         } else {
-            Dialog_Internet dialog = new Dialog_Internet(MainActivity.this);
             dialog.show();
+            ((ProgressBar)findViewById(R.id.loading_recipes)).setVisibility(View.GONE);
         }
-
-
     }
 
 
@@ -118,7 +126,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             String sAux = "\nTe invito a descargar esta aplicación:\n\n";
             sAux = sAux + "https://play.google.com/store/apps/details?id=me.doapps.pondetuparte&hl=es\n\n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
-            startActivity(Intent.createChooser(i, "Compartir"));
+            startActivity(Intent.createChooser(i, "Compartir App"));
         } catch (Exception e) {
             //e.toString();
         }

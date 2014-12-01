@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import me.doapps.christmasrecipes.R;
 import me.doapps.christmasrecipes.beans.Recipe_DTO;
+import me.doapps.christmasrecipes.utils.UtilFonts;
 
 /**
  * Created by jonathan on 29/11/2014.
@@ -64,9 +65,14 @@ public class Adapter_Recipes extends BaseAdapter {
         }
 
         holder.txt_recipe_name.setText(recipe_dto.getName());
+        holder.txt_recipe_name.setTypeface(UtilFonts.setHelveticaBold(context));
         holder.txt_recipe_serves.setText(String.valueOf(recipe_dto.getServes())+" personas");
+        holder.txt_recipe_serves.setTypeface(UtilFonts.setHelveticaThin(context));
         holder.txt_recipe_cook.setText(String.valueOf(recipe_dto.getCook())+" min.");
+        holder.txt_recipe_cook.setTypeface(UtilFonts.setHelveticaThin(context));
         Picasso.with(context).load(recipe_dto.getImage_url()).placeholder(R.drawable.recipe_default).centerCrop().fit().into(holder.img_recipe);
+
+
         return view;
     }
 
