@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Recetas Navideñas</string>
+    <string name="app_name">Christmas Recipes</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
     <!-- Main Activity -->
-    <string name="title">Recetas Navideñas</string>
+    <string name="title">Christmas Recipes</string>
     <string name="recipe_name">Pavo al horno con papas</string>
     <string name="recipe_prepare">5 min</string>
     <string name="recipe_cook">10 min</string>
